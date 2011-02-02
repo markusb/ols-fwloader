@@ -7,5 +7,9 @@ I have therefore created this tool. Simple, yet effective.
 
 License is yet to be added. For now assume GPLv3 license.
 
+There is some usage information / documentation in the dangerousprototypes wiki:
+http://dangerousprototypes.com/docs/Logic_Sniffer:_Comprehensive_update_application
+
+To compile you need the libusb-1.0-0-dev package. (This is not the same as libusb-dev !)
 
 Furure plan includes integration with ols-loader.
