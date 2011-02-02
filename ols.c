@@ -183,17 +183,17 @@ int OLS_GetID(struct ols_t *ols)
 
 	res = serial_write(ols->fd, cmd, 4);
 	if (res != 4) {
-		printf("Error writing to OLS\n");
+		printf("Error sending version command to OLS\n");
 		return -2;
 	}
 
 	res = serial_read(ols->fd, ret, 7);
 	if (res != 7) {
-		printf("Error reading OLS id\n");
+		printf("Error reading OLS version info\n");
 		return -1;
 	}
 
-	printf("Found OLS HW: %d, FW: %d.%d, Boot: %d\n", ret[1], ret[3], ret[4], ret[6]);
+	printf("Found OLS:  Hardware: %d, Firmware: %d.%d, Bootloader: %d\n", ret[1], ret[3], ret[4], ret[6]);
 	return 0;
 }
 

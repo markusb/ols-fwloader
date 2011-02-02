@@ -25,6 +25,7 @@ enum {
 	CMD_ERASE = 8,
 	CMD_RESET = 16,
 	CMD_SELFTEST = 32,
+	CMD_VERSION = 64,
 };
 
 enum {
@@ -43,11 +44,13 @@ static void usage()
 	printf("  -E      - erase flash\n");
 	printf("  -W      - erase and write flash with wfile\n");
 	printf("  -R      - read flash to rfile\n");
-	printf("  -T      - reset device at the end\n\n");
+	printf("  -i      - read and display version information");
 	printf("  -t type - File type (BIN/HEX) (default: HEX)\n");
 	printf("  -w file - file to be read and written to flash\n");
 	printf("  -r file - file where the flash content should be written to\n");
 	printf("  -d      - be verbosse\n");
+	printf("  -P port - Serial port device\n");
+	printf("  -T      - reset device at the end\n\n");
 
 	printf("BOOT only options: \n");
 	printf("  -p pid  - Set usb PID\n");
@@ -55,7 +58,6 @@ static void usage()
 	printf("  -n      - enter bootloader first\n");
 
 	printf("APP only options: \n");
-	printf("  -P port - Serial port device\n");
 	printf("  -l num  - Limit number of read/written pages to num\n");
 	printf("  -S      - run selftest\n");
 
@@ -104,7 +106,7 @@ int main(int argc, char** argv)
 	fo = GetFileOps("HEX");
 
 	// parse args
-	while ((opt = getopt(argc, argv, "WRVETSnr:w:v:p:t:P:f:hd")) != -1) {
+	while ((opt = getopt(argc, argv, "WRVETSnr:w:v:p:t:P:f:hdi")) != -1) {
 		switch (opt) {
 			case 'd':
 				debug = 1;
@@ -130,6 +132,9 @@ int main(int argc, char** argv)
 				break;
 			case 'S':
 				cmd |= CMD_SELFTEST;
+				break;
+			case 'i':
+				cmd |= CMD_VERSION;
 				break;
 			case 'l':
 				page_limit = atoi(optarg);
@@ -210,6 +215,14 @@ int main(int argc, char** argv)
 			error = 1;
 		}
 	}
+
+    if ((cmd & CMD_VERSION) && (port == NULL)) {
+		fprintf(stderr, "Missing port \n");
+		error = 1;
+    }
+    if ((cmd & CMD_VERSION) && ((device & DEV_APP) == 0)) {
+    	device |= DEV_APP;
+    }
 
 	if ((device & 3) == 0) {
 		fprintf(stderr, "Device not set\n");
@@ -449,6 +462,10 @@ int main(int argc, char** argv)
 				printf("Verify failed :(\n");
 			}
 		}
+	}
+
+	if (cmd & CMD_VERSION) {
+		// display version information
 	}
 
 	if (cmd & CMD_RESET) {

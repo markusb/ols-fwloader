@@ -102,7 +102,7 @@ struct ols_boot_t *BOOT_Init(uint16_t vid, uint16_t pid)
 	libusb_set_debug(ob->ctx, 4);
 	ob->dev = libusb_open_device_with_vid_pid(ob->ctx, vid, pid);
 	if (ob->dev == NULL) {
-		fprintf(stderr, "Device not found\n");
+		fprintf(stderr, "USB-device %4x:%4x not found, is the OLS in bootloader mode ?\n",vid,pid);
 		free(ob);
 		return NULL;
 	}
